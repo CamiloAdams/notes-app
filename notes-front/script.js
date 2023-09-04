@@ -86,58 +86,84 @@ function login() {
   return false;
 }
 
-function register() {
-  // if (
-  //   document.getElementById("passwordr") !=
-  //     document.getElementById("passwordr_confirm")
-  // ) {
-  //   Swal.fire({
-  //     text: "“Passwords do not match.",
-  //     icon: "error",
-  //     confirmButtonColor: "#0b0217",
-  //     confirmButtonText: "OK",
-  //   });
-  //   return;
-  // }
-  const username = document.getElementById("usernamer").value;
-  const email = document.getElementById("emailr").value;
-  const password = document.getElementById("passwordr").value;
+function test() {
+  if (
+    document.getElementById("passwordr").value !==
+      document.getElementById("passwordr_confirm").value
+  ) {
+    Swal.fire({
+      text: "“Passwords do not match.",
+      icon: "error",
+      confirmButtonColor: "#0b0217",
+      confirmButtonText: "OK",
+    });
+  } else {
+    console.log("holaaa");
+  }
+}
 
-  const xhttp = new XMLHttpRequest();
-  xhttp.open("POST", "http://localhost:3000/api/auth/register");
-  xhttp.setRequestHeader(
-    "Content-Type",
-    "application/json;charset=UTF-8",
-  );
-  xhttp.send(
-    JSON.stringify({
-      username: username,
-      email: email,
-      password: password,
-    }),
-  );
-  xhttp.onreadystatechange = function () {
-    if (this.readyState == 4) {
-      const objects = JSON.parse(this.responseText);
-      if (this.status == "200") {
-        localStorage.setItem("jwt", objects["token"]);
-        Swal.fire({
-          text: "Registro Exitoso",
-          icon: "success",
-          confirmButtonText: "OK",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            localStorage.removeItem("jwt");
-            // window.location.href = "./succes_register.html";
-          }
-        });
-      } else {
-        Swal.fire({
-          text: "Error",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-      }
+function register() {
+  if (
+    document.getElementById("passwordr").value !==
+      document.getElementById("passwordr_confirm").value
+  ) {
+    Swal.fire({
+      text: "“Passwords do not match.",
+      icon: "error",
+      confirmButtonColor: "#0b0217",
+      confirmButtonText: "OK",
+    });
+  } else {
+    const username = document.getElementById("usernamer").value;
+    const email = document.getElementById("emailr").value;
+    const password = document.getElementById("passwordr").value;
+
+    if(!verifyEmail(email)){
+      alert('Invalid email format')
+      return
     }
-  };
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "http://localhost:3000/api/auth/register");
+    xhttp.setRequestHeader(
+      "Content-Type",
+      "application/json;charset=UTF-8",
+    );
+    xhttp.send(
+      JSON.stringify({
+        username: username,
+        email: email,
+        password: password,
+      }),
+    );
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4) {
+        const objects = JSON.parse(this.responseText);
+        if (this.status == "200") {
+          localStorage.setItem("jwt", objects["token"]);
+          Swal.fire({
+            text: "Registro Exitoso",
+            icon: "success",
+            confirmButtonText: "OK",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              localStorage.removeItem("jwt");
+              window.location.href = "./index.html";
+            }
+          });
+        } else {
+          console.log(objects.message);
+          Swal.fire({
+            text: objects["message"],
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        }
+      }
+    };
+  }
+}
+
+function verifyEmail(email) {
+  var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  return (regex.test(email));
 }
