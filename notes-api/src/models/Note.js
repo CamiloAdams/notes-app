@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 const noteSchema = new Schema(
     {
-        id_usuario: {
+        user_id: {
             ref: "User",
             type: Schema.Types.ObjectId,
         },

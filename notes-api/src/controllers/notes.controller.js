@@ -20,13 +20,13 @@ export const createNote = async (req, res) => {
     if (!user) return res.status(404).json({ message: "No user found" });
 
     const newNote = new Note({
-      id_usuario: decoded.id,
+      user_id: decoded.id,
       title,
       content,
     });
 
     const noteSaved = await newNote.save();
-    delete noteSaved["_doc"].id_usuario
+    delete noteSaved["_doc"].user_id;
 
     res.status(201).json({
       noteSaved,
