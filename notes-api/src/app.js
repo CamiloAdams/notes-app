@@ -10,7 +10,7 @@ import userRoutes from "./routes/user.routes";
 
 const app = express();
 
-createRoles().then((onresolve) => createAdminUser());
+createRoles().then(() => createAdminUser());
 
 app.set("pkg", pkg);
 

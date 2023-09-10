@@ -4,58 +4,41 @@ import jwt from "jsonwebtoken";
 import config from "../config";
 
 export const createNote = async (req, res) => {
-  try {
-    const token = req.headers["x-access-token"];
+  const token = req.headers["x-access-token"];
 
-    if (!token) {
-      return res.status(403).json({ message: "No token provided" });
-    }
+  const decoded = jwt.verify(token, config.SECRET);
 
-    const decoded = await jwt.verify(token, config.SECRET);
+  const { title, content } = req.body;
 
-    const { title, content } = req.body;
-
-    const user = await User.findById(decoded.id, { password: 0 });
-
-    if (!user) return res.status(404).json({ message: "No user found" });
-
-    const newNote = new Note({
-      user_id: decoded.id,
-      title,
-      content,
-    });
-
-    const noteSaved = await newNote.save();
-    delete noteSaved["_doc"].user_id;
-
-    res.status(201).json({
-      noteSaved,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(401).json({ message: "Unautorized" });
+  if (!title || title.trim().length <= 0) {
+    return res.status(400).json({ message: "No title provided" });
   }
+
+  if (!content || content.trim().length <= 0) {
+    return res.status(400).json({ message: "No content provided" });
+  }
+
+  const newNote = new Note({
+    user_id: decoded.id,
+    title,
+    content,
+  });
+
+  const noteSaved = await newNote.save();
+  delete noteSaved["_doc"].user_id;
+
+  res.status(201).json({
+    noteSaved,
+  });
 };
 
 export const getNotes = async (req, res) => {
   try {
     const token = req.headers["x-access-token"];
 
-    if (!token) {
-      return res.status(403).json({ message: "No token provided" });
-    }
+    const decoded =  jwt.verify(token, config.SECRET);
 
-    const decoded = await jwt.verify(token, config.SECRET);
-
-    const user = await User.findById(decoded.id, {
-      username: 0,
-      password: 0,
-      roles: 0,
-    });
-
-    if (!user) return res.status(404).json({ message: "No user found" });
-
-    const notes = await Note.find({ id_usuario: user.id }, { id_usuario: 0 });
+    const notes = await Note.find({ user_id: decoded.id }, { user_id: 0 });
 
     res.status(200).json(notes);
   } catch (error) {

@@ -13,7 +13,9 @@ import Role from "../models/Role";
 export const register = async (req, res) => {
   //Get the parameters stored in req.body
   const { username, email, password } = req.body;
-  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
+  const regexPassword =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
+  const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   //check if username or email already exists
   const userFound = await User.findOne({ username });
   const emailFound = await User.findOne({ email });
@@ -26,7 +28,12 @@ export const register = async (req, res) => {
     return res.status(400).json({ message: "Email already in use" });
   }
 
-  if (!regex.test(password)) {
+  if (!regexEmail.test(email)) {
+    return res.status(400).json({
+      message: "The email format is not valid.",
+    });
+  }
+  if (!regexPassword.test(password)) {
     return res.status(400).json({
       message:
         "The password must contain at least one lowercase letter, one uppercase letter, one number, one special character and have a minimum length of 8.",
@@ -40,11 +47,6 @@ export const register = async (req, res) => {
     password: await User.encryptPassword(password),
   });
 
-  // if (roles) {
-  //     const foundRoles = await Role.find({ name: { $in: roles } });
-  //     newUser.roles = foundRoles.map((role) => role._id);
-  // } else {
-  // Assign the user role to the new user
   const role = await Role.findOne({ name: "user" });
   newUser.roles = [role._id];
 
