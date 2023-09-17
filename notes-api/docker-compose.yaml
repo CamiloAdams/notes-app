@@ -1,0 +1,8 @@
+version: "3.9"
+
+services:
+  mongodb:
+    image: mongo:6.0.9
+    environment:
+      MONGOALLOWSVCRAM: yes
+      MONGODB_EXTRA_FLAGS: "--setParameter timeZone=America/Bogota"
