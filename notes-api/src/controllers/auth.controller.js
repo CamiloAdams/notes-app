@@ -96,5 +96,16 @@ export const login = async (req, res) => {
     roles.push(role.name);
   });
 
+  res.cookie('token',token, {
+    secure: true,
+    httpOnly: true,
+    sameSite: "lax",
+  });
+
   res.json({ token, roles: roles });
+};
+
+export const logout = async (req, res) => {
+  res.clearCookie();
+  res.json({ message: "User logged out successfully"});
 };

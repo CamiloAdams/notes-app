@@ -7,9 +7,7 @@ export const getCookie = async (req, res) => {
 };
 
 export const setCookie = async (req, res) => {
-  res.cookie(`Cookie token name`, `encrypted cookie string Value`, {
-    maxAge: 5000,
-    secure: true,
+  res.cookie(`name`, `encrypted cookie string Value`, {
     httpOnly: true,
     sameSite: "lax",
   });
