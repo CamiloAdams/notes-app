@@ -7,14 +7,15 @@ export const getCookie = async (req, res) => {
 };
 
 export const setCookie = async (req, res) => {
-  res.cookie(`name`, `encrypted cookie string Value`, {
+  res.cookie('name', `hola soy una cookie`, {
     httpOnly: true,
-    sameSite: "lax",
+    secure: true,
+    sameSite: 'lax'
   });
   res.send("Cookie have been saved successfully");
 };
 
 export const deleteCookie = async (req, res) => {
-  res.clearCookie();
+  res.clearCookie('name');
   res.send("Cookie has been deleted successfully");
 };
