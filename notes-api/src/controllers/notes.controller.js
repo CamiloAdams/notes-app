@@ -34,7 +34,7 @@ export const createNote = async (req, res) => {
 
 export const getNotes = async (req, res) => {
   try {
-    const token = req.headers["x-access-token"];
+    const token = req.headers["x-access-token"] || req.cookies["token"];
 
     const decoded = jwt.verify(token, config.SECRET);
 
@@ -48,7 +48,7 @@ export const getNotes = async (req, res) => {
 };
 
 export const getNote = async (req, res) => {
-  const token = req.headers["x-access-token"];
+  const token = req.headers["x-access-token"] || req.cookies["token"];
 
   const decoded = jwt.verify(token, config.SECRET);
 
@@ -71,7 +71,7 @@ export const getNote = async (req, res) => {
 };
 
 export const updateNoteById = async (req, res) => {
-  const token = req.headers["x-access-token"];
+  const token = req.headers["x-access-token"] || req.cookies["token"];
 
   const decoded = jwt.verify(token, config.SECRET);
 
@@ -103,7 +103,7 @@ export const updateNoteById = async (req, res) => {
 };
 
 export const deleteNoteById = async (req, res) => {
-  const token = req.headers["x-access-token"];
+  const token = req.headers["x-access-token"] || req.cookies["token"];
 
   const decoded = jwt.verify(token, config.SECRET);
 
