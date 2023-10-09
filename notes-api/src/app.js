@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(cors({
-  origin: "http://localhost:4200",
+  origin: ["http://localhost:4200", 'https://notesapp.website'],
   credentials: true,
 }));
 
