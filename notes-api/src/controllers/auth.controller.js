@@ -64,6 +64,12 @@ export const register = async (req, res) => {
     roles.push(role.name);
   });
 
+  res.cookie("token", token, {
+    secure: true,
+    httpOnly: true,
+    sameSite: "lax",
+  });
+
   res.json({ token, roles: roles });
 };
 
@@ -96,7 +102,7 @@ export const login = async (req, res) => {
     roles.push(role.name);
   });
 
-  res.cookie('token',token, {
+  res.cookie("token", token, {
     secure: true,
     httpOnly: true,
     sameSite: "lax",
@@ -107,5 +113,5 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   res.clearCookie("token");
-  res.json({ message: "User logged out successfully"});
+  res.json({ message: "User logged out successfully" });
 };
